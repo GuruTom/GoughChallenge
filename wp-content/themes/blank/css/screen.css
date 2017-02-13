@@ -1,0 +1,83 @@
+/*---------------------------
+	Variables
+----------------------------*/
+/*---------------------------
+	General
+----------------------------*/
+html, body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px; }
+
+a {
+  text-decoration: none;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out; }
+  a:hover {
+    text-decoration: none; }
+
+p {
+  line-height: 1.8em; }
+
+/*---------------------------------------------------------------------
+	WordPress Login Page Style
+----------------------------------------------------------------------*/
+body.login {
+  background: #000; }
+
+body.login div#login h1 a {
+  background: url(../img/logo-admin.png) no-repeat;
+  background-position: center;
+  width: 100%;
+  margin-bottom: 0px; }
+
+body.login div#login form#loginform {
+  background: #fff;
+  box-shadow: none;
+  box-sizing: border-box;
+  width: 100%; }
+
+body.login div#login form#loginform p label {
+  color: #000;
+  font-size: 15px; }
+
+body.login div#login form#loginform input {
+  background: none;
+  border: none;
+  padding-left: 5px;
+  color: #000;
+  box-shadow: none; }
+
+body.login div#login form#loginform input#user_login {
+  background: #f1f1f1;
+  height: 40px;
+  font-size: 18px; }
+  body.login div#login form#loginform input#user_login:focus {
+    border-bottom: 2px solid #000; }
+
+body.login div#login form#loginform input#user_pass {
+  background: #f1f1f1;
+  height: 40px;
+  font-size: 18px; }
+  body.login div#login form#loginform input#user_pass:focus {
+    border-bottom: 2px solid #000; }
+
+body.login div#login form#loginform p.forgetmenot input#rememberme {
+  background: #000; }
+
+body.login div#login form#loginform p.submit input#wp-submit {
+  border: 1px solid #000;
+  color: #000;
+  border-radius: 0px;
+  box-shadow: none;
+  width: 100%;
+  height: 35px;
+  margin-top: 10px;
+  -webkit-transition: background 0.5s ease-in-out;
+  transition: background 0.5s ease-in-out; }
+  body.login div#login form#loginform p.submit input#wp-submit:hover {
+    background: #000;
+    color: #fff; }

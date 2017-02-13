@@ -1,0 +1,5 @@
+- Rename theme folder from 'blank' to site name
+- Add a screenshot.png (600 x 450) which will be used as the theme image in WP admin
+- Change annotation in style.css to suit website
+- Login to the admin and set theme name (defined in style.css) in the admin to active
+- Modify scss/_admin.scss and take out undefined variables

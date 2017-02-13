@@ -1,0 +1,71 @@
+/*---------------------------------------------------------------------
+	WordPress Login Page Style
+----------------------------------------------------------------------*/
+
+body.login {
+	background: $black;
+}
+body.login div#login h1 a {
+	background: url(../img/logo-admin.png) no-repeat;
+	background-position: center;
+	width: 100%;
+	margin-bottom: 0px;
+
+}
+body.login div#login form#loginform {
+	background: $white;
+	box-shadow: none;
+	box-sizing: border-box;
+	width: 100%;
+}
+body.login div#login form#loginform p {}
+body.login div#login form#loginform p label {
+	color: $black;
+	font-size: 15px;
+}
+body.login div#login form#loginform input {
+	background: none;
+	border: none;
+	padding-left: 5px;
+	color: $black;
+	box-shadow: none;
+}
+body.login div#login form#loginform input#user_login {
+	background: $white;
+	height: 40px;
+	font-size: 18px;
+	&:focus {
+		border-bottom: 2px solid $black;
+	}
+}
+body.login div#login form#loginform input#user_pass {
+	background: $white;
+	height: 40px;
+	font-size: 18px;
+	&:focus {
+		border-bottom: 2px solid $black;
+	}
+}
+body.login div#login form#loginform p.forgetmenot {}
+body.login div#login form#loginform p.forgetmenot input#rememberme {
+	background: $black;
+}
+body.login div#login form#loginform p.submit {}
+body.login div#login form#loginform p.submit input#wp-submit {
+	border: 1px solid $black;
+	color: $black;
+	border-radius: 0px;
+	box-shadow: none;
+	width: 100%;
+	height: 35px;
+	margin-top: 10px;
+	@include transition(background, .5s, ease-in-out);
+	&:hover {
+		background: $black;
+		color: $white;
+	}
+}
+body.login div#login p#nav {}
+body.login div#login p#nav a {}
+body.login div#login p#backtoblog {}
+body.login div#login p#backtoblog a {}
