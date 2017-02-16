@@ -64,8 +64,11 @@ p {
       border: 1px solid #fff;
       color: #fff;
       margin-top: 20px;
+      outline: none;
       -webkit-transition: all .3s ease-out;
       transition: all .3s ease-out; }
+      .home-page .intro form #calculate:focus {
+        outline: none !important; }
       .home-page .intro form #calculate:hover {
         background-color: #fff;
         color: #000; }
