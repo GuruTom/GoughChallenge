@@ -1,1 +1,46 @@
 // Footer Styles
+
+footer {
+
+	hr {
+		border: 1px solid #BDBDBD;
+	}
+	
+	.social-links {
+		list-style: none;
+	    margin: 0 0 20px;
+	    padding: 0;
+
+		li {
+			display: inline-block;
+		    margin: 0 5px;
+		    border-radius: 3px;
+		    box-shadow: 0 4px 0 transparent;
+		    -webkit-transition: all .3s ease-out;
+		    transition: all .3s ease-out;
+			a {
+				display: block;
+			    color: #fff;
+			    color: rgba(255,255,255,.3);
+			    font-size: 18px;
+			    width: 40px;
+			    height: 40px;
+			    line-height: 40px;
+			    text-align: center;
+			    background: rgba(0,0,0,.2);
+			    border-radius: 50%;
+			    -webkit-transition: all .3s ease-out;
+			    transition: all .3s ease-out;
+
+				&:hover {
+					color: #fff;
+					background: #38A5DB;
+				}
+			}
+
+			.fa-fw {
+				padding-top: 10px;
+			}
+		}
+	}
+}

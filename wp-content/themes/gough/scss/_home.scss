@@ -1,1 +1,77 @@
 // Homepage Styles
+
+.home-page {
+
+	.intro {
+		text-align: center;
+
+		.content {
+			h1 {
+				font-weight: 900;
+				font-size: 30px;
+			}
+
+			h2 {
+				font-weight: 100;
+				font-size: 20px;
+			}
+		}
+		.col-centered {
+			float: none;
+			margin: auto;
+		}
+
+		form {
+			background-color: $darkPrimary;
+			padding: 30px !important;
+
+			.DC_title {
+				padding-bottom: 20px;
+			    font-size: 20px;
+			}
+
+			#from {
+    			margin-bottom: 10px;
+				background-color: transparent;
+				border: 1px solid $white;
+				border-radius: 11px;
+				padding: 10px;
+				color: $white;
+
+				&:focus {
+					outline: none;
+				}
+			}
+			#to {
+				margin-bottom: 10px;
+				background-color: transparent;
+				border: 1px solid $white;
+				border-radius: 11px;
+				padding: 10px;
+				color: $white;
+
+				&:focus {
+					outline: none;
+				}
+			}
+			#calculate {
+				padding: 10px 30px;
+			    background-color: transparent;
+			    border: 1px solid #fff;
+			    color: #fff;
+			    margin-top: 20px;
+				-webkit-transition: all .3s ease-out;
+			    transition: all .3s ease-out;
+
+				&:hover {
+					background-color: $white;
+					color: $black
+				}
+			}
+		}
+
+		#result {
+
+		}
+	}
+}

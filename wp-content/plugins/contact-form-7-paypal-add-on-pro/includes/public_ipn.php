@@ -175,8 +175,8 @@ function cf7pp_ipn() {
 					$mail2_dir = $basedir.$uploaddir."/".$mail2_key[2];
 					rrmdir($mail2_dir);
 				}
-
-				do_action('cf7pp_payment_successful', $values[1]);
+				
+				do_action('cf7pp_payment_successful');
 				
 			}
 		

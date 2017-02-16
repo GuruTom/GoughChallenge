@@ -1,17 +1,17 @@
 <?php
 
 /*
-Plugin Name: Contact Form 7 - PayPal Add-on - Pro
-Plugin URI: https://wpplugin.org/paypal/
+Plugin Name: Contact Form 7 - PayPal Add-on Pro
+Plugin URI: https://wpplugin.org/contact-form-7-paypal-add-on/
 Description: Integrates PayPal with Contact Form 7
 Author: Scott Paterson
 Author URI: https://wpplugin.org
-Version: 1.7.3
+Version: 1.8
 */
 
 
 /* 
-Copyright 2014-2015 Scott Paterson
+Copyright 2014-2016 Scott Paterson
 This is not free software.
 You do not have permission to distribute this software under any circumstances.
 You may modify this software (excluding the license and update manager) for personal use only if you hold a valid license key.
@@ -20,6 +20,14 @@ You may modify this software (excluding the license and update manager) for pers
 
 
 // plugin variable: cf7pp
+
+
+// define
+define('WPPlUGIN_PRODUCT_NAME', 	'Contact Form 7 - PayPal Add-on Pro');
+define('WPPlUGIN_VERSION_NUM', 		'1.8');
+define('WPPlUGIN_STORE_URL', 		'https://wpplugin.org');
+define('WPPlUGIN_AUTHOR_NAME', 		'Scott Paterson');
+
 
 
 
@@ -138,20 +146,37 @@ function cf7pp_my_plugin_admin_notices() {
 
 
 // updater
-require 'updater/plugin-update-checker.php';
-$MyUpdateChecker = PucFactory::buildUpdateChecker(
-'https://wpplugin.org/updates-server/?action=get_metadata&slug=contact-form-7-paypal-add-on-pro',
-__FILE__,
-'contact-form-7-paypal-add-on-pro'
-);
+if( !class_exists( 'cf7pp_updater' ) ) {
+	include( 'manager/private_updater.php' );
+}
 
+
+function cf7pp_plugin_updater() {
+	$license_key = trim( get_option('cf7pp_plicsence_keycf7pp') );
+	$edd_updater = new cf7pp_updater(WPPlUGIN_STORE_URL, __FILE__, array(
+			'version' 	=> WPPlUGIN_VERSION_NUM,
+			'license' 	=> $license_key,
+			'item_name' => WPPlUGIN_PRODUCT_NAME,
+			'author' 	=> WPPlUGIN_AUTHOR_NAME,
+			'url'		=> home_url()
+		)
+	);
+
+}
+add_action( 'admin_init', 'cf7pp_plugin_updater', 0 );
+
+// manager
+include_once ('manager/private_manager.php');
 
 
 // for redirect method 2
 $options = get_option('cf7pp_options');
 foreach ($options as $k => $v ) { $value[$k] = $v; }
-if ($value['redirect'] == "2") {
-	define('WPCF7_LOAD_JS', false);
+
+if (!empty($value['redirect'])) {
+	if ($value['redirect'] == "2") {
+		define('WPCF7_LOAD_JS', false);
+	}
 }
 
 
@@ -249,10 +274,24 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 			foreach ($options as $k => $v ) { $value[$k] = $v; }
 			
 			// for redirect method 1
-			if ($value['redirect'] == "1") {			
-				$site_url = get_site_url();
-				$path = $site_url.'/?cf7pp_redirect='.$new_post_id.'&orig='.$postid.'&tags='.$tags_id;
-				$wpcf7->set_properties(array('additional_settings' => "on_sent_ok: \"location.replace('".$path."');\"",));
+			$enable = get_post_meta( $postid, "_cf7pp_enable", true);
+			
+			// skip if price is 0, if setting is enabled
+			$skip = get_post_meta( $postid, "_cf7pp_skip", true);
+			
+			if ($skip == "1" && $tags['price'] == "0") {
+				$no_redirect = "1";
+				wp_delete_post($tags_id,true);
+			} else {
+				$no_redirect = "0";
+			}		
+			
+			if ($enable == "1" && $no_redirect != "1") {
+				if ($value['redirect'] == "1") {
+					$site_url = get_site_url();
+					$path = $site_url.'/?cf7pp_redirect='.$new_post_id.'&orig='.$postid.'&tags='.$tags_id;
+					$wpcf7->set_properties(array('additional_settings' => "on_sent_ok: \"location.replace('".$path."');\"",));
+				}
 			}
 			
 			// do not send the email depending on settings
@@ -304,8 +343,30 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 				$posted_data = $submission->get_posted_data();
 				$postid = $posted_data['_wpcf7'];
 				$enable = get_post_meta( $postid, "_cf7pp_enable", true);
+				$skip = get_post_meta( $postid, "_cf7pp_skip", true);
+				
+				$content = get_post($tags_id);
+				
+				if (!empty($content)) {
+					$array = $content->post_content;
+					$tags_back = unserialize(base64_decode($array));
+					foreach ($tags_back as $k => $v ) { $tags[$k] = $v; }
+				}
+				
+				
+				if (empty($tags['price'])) {
+					$tags['price'] = "0";
+				}
+				
+				if ($skip == "1" && $tags['price'] == "0") {
+					$no_redirect = "1";
+					wp_delete_post($tags_id,true);
+				} else {
+					$no_redirect = "0";
+				}
+				
 				$tagsid = $tags_id;
-				if ($enable == "1") {
+				if ($enable == "1" && $no_redirect != "1") {
 					include_once ('includes/public_redirect.php');
 					exit;
 				}
@@ -397,6 +458,7 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 		$post_id = sanitize_text_field($_GET['post']);
 		
 		$enable = get_post_meta($post_id, "_cf7pp_enable", true);
+		$price_skip = get_post_meta($post_id, "_cf7pp_skip", true);
 		$name = get_post_meta($post_id, "_cf7pp_name", true);
 		$desc = get_post_meta($post_id, "_cf7pp_desc", true);
 		$price = get_post_meta($post_id, "_cf7pp_price", true);
@@ -407,6 +469,7 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 		$sandbox = get_post_meta($post_id, "_cf7pp_sandbox", true);
 		$note = get_post_meta($post_id, "_cf7pp_note", true);
 		$form_account = get_post_meta($post_id, "_cf7pp_form_account", true);
+		$currency = get_post_meta($post_id, "_cf7pp_currency", true);
 		$cancel = get_post_meta($post_id, "_cf7pp_cancel", true);
 		$return = get_post_meta($post_id, "_cf7pp_return", true);
 		$quantity_menu = get_post_meta($post_id, "_cf7pp_quantity_menu", true);
@@ -418,6 +481,7 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 		
 		if ($enable == "1") { $checked_enable = "CHECKED"; } else { $checked_enable = ""; }
 		if ($sandbox == "1") { $checked_sandbox = "CHECKED"; } else { $checked_sandbox = ""; }
+		if ($price_skip == "1") { $checked_skip = "CHECKED"; } else { $checked_skip = ""; }
 		
 		if ($email == "1" || $email == "2" || $email == "3") {
 			if ($email == "2") { $before = "SELECTED"; $after = ""; $never = ""; }
@@ -470,6 +534,42 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 		$admin_table_output .= "PayPal Account: </td></tr><tr><td>";
 		$admin_table_output .= "<input type='text' name='form_account' value='$form_account'> </td><td>  (Optional - will override PayPal account on settings page, but only for this form.)</td></tr><tr><td>";
 		
+		
+		
+		$admin_table_output .= "Currency: </td></tr><tr><td>";
+		$admin_table_output .= "
+				<select name='currency'>
+				<option>Default Currency</option>
+				<option "; if ($currency == '1') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='1'>Australian Dollar - AUD</option>
+				<option "; if ($currency == '2') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='2'>Brazilian Real - BRL</option> 
+				<option "; if ($currency == '3') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='3'>Canadian Dollar - CAD</option>
+				<option "; if ($currency == '4') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='4'>Czech Koruna - CZK</option>
+				<option "; if ($currency == '5') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='5'>Danish Krone - DKK</option>
+				<option "; if ($currency == '6') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='6'>Euro - EUR</option>
+				<option "; if ($currency == '7') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='7'>Hong Kong Dollar - HKD</option> 	 
+				<option "; if ($currency == '8') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='8'>Hungarian Forint - HUF</option>
+				<option "; if ($currency == '9') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='9'>Israeli New Sheqel - ILS</option>
+				<option "; if ($currency == '10') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='10'>Japanese Yen - JPY</option>
+				<option "; if ($currency == '11') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='11'>Malaysian Ringgit - MYR</option>
+				<option "; if ($currency == '12') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='12'>Mexican Peso - MXN</option>
+				<option "; if ($currency == '13') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='13'>Norwegian Krone - NOK</option>
+				<option "; if ($currency == '14') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='14'>New Zealand Dollar - NZD</option>
+				<option "; if ($currency == '15') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='15'>Philippine Peso - PHP</option>
+				<option "; if ($currency == '16') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='16'>Polish Zloty - PLN</option>
+				<option "; if ($currency == '17') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='17'>Pound Sterling - GBP</option>
+				<option "; if ($currency == '18') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='18'>Russian Ruble - RUB</option>
+				<option "; if ($currency == '19') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='19'>Singapore Dollar - SGD</option>
+				<option "; if ($currency == '20') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='20'>Swedish Krona - SEK</option>
+				<option "; if ($currency == '21') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='21'>Swiss Franc - CHF</option>
+				<option "; if ($currency == '22') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='22'>Taiwan New Dollar - TWD</option>
+				<option "; if ($currency == '23') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='23'>Thai Baht - THB</option>
+				<option "; if ($currency == '24') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='24'>Turkish Lira - TRY</option>
+				<option "; if ($currency == '25') { $admin_table_output .= 'SELECTED'; } $admin_table_output .= " value='25'>U.S. Dollar - USD</option>
+				</select>
+		</td><td>  (Optional - will override currnecy setting on settings page, but only for this form.)</td></tr><tr><td>";
+		
+		
+		
 		$admin_table_output .= "Cancel URL: </td></tr><tr><td>";
 		$admin_table_output .= "<input type='text' name='cancel' value='$cancel'> </td><td> (Optional - Overrides settings page value. If the customer goes to PayPal and clicks the cancel button, where do they go.)</td></tr><tr><td>";
 		
@@ -482,10 +582,13 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 		$admin_table_output .= "Price Code: </td></tr><tr><td>";
 		$admin_table_output .= "<input type='text' name='price_menu' value='$price_menu'> </td><td> (Optional - Link number form item to price by entering item code. Example: menu-244 Documentation: <a target='_blank' href='https://wpplugin.org/documentation/?document=2823'>here</a>)</td></tr><tr><td>";
 		
+		$admin_table_output .= "Skip Redirect: </td></tr><tr><td>";
+		$admin_table_output .= "<input name='price_skip' value='1' type='checkbox' $checked_skip> </td><td> (Optional - Check if you would like to skip redirecting to PayPal for 0.00 amounts.)</td></tr><tr><td>";
+		
 		$admin_table_output .= "Options - Text 1 Name / Code: </td></tr><tr><td>";
 		$admin_table_output .= "<input type='text' name='text_menu_a_name' value='$text_menu_a_name'><input type='text' name='text_menu_a' value='$text_menu_a'> </td><td> (Optional - Link text or number form item to text field 1 by entering item code. Example: Color / text-530 Documentation: <a target='_blank' href='https://wpplugin.org/documentation/?document=2860'>here</a>)</td></tr><tr><td>";
 		
-		$admin_table_output .= "Options - Test 2 Name / Code: </td></tr><tr><td>";
+		$admin_table_output .= "Options - Text 2 Name / Code: </td></tr><tr><td>";
 		$admin_table_output .= "<input type='text' name='text_menu_b_name' value='$text_menu_b_name'><input type='text' name='text_menu_b' value='$text_menu_b'> </td><td valign='top'> (Optional - Link text or number form item to text field 2 by entering item code. Example: Email / email-100 Documentation: <a target='_blank' href='https://wpplugin.org/documentation/?document=2860'>here</a>)</td></tr><tr><td>";
 		
 		$admin_table_output .= "<input type='hidden' name='post' value='$post_id'>";
@@ -521,6 +624,13 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 				update_post_meta($post_id, "_cf7pp_sandbox", 0);
 			}
 			
+			if (!empty($_POST['price_skip'])) {
+				$skip = sanitize_text_field($_POST['price_skip']);
+				update_post_meta($post_id, "_cf7pp_skip", $skip);
+			} else {
+				update_post_meta($post_id, "_cf7pp_skip", 0);
+			}
+			
 			$name = sanitize_text_field($_POST['name']);
 			update_post_meta($post_id, "_cf7pp_name", $name);
 			
@@ -529,6 +639,9 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 			
 			$price = sanitize_text_field($_POST['price']);
 			update_post_meta($post_id, "_cf7pp_price", $price);
+			
+			$currency = sanitize_text_field($_POST['currency']);
+			update_post_meta($post_id, "_cf7pp_currency", $currency);
 			
 			$id = sanitize_text_field($_POST['id']);
 			update_post_meta($post_id, "_cf7pp_id", $id);
@@ -584,15 +697,15 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 	function cf7pp_admin_table() {
 	
 	// manager
-	include_once ('manager/manager.php');
 	$kstatus = get_option('cf7pp_plicsence_key_status');
+	
 	if (empty($kstatus)) { $kstatus = "false"; }
 	
-	if ($kstatus == "true") {
+	if ($kstatus == "true" || $kstatus == "valid") {
 
 		?>
 		
-		<form method='post' action='<?php $_SERVER["REQUEST_URI"]; ?>'>
+		<form method='post'>
 		
 		
 		<?php
@@ -610,6 +723,7 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 			$options['tax'] = sanitize_text_field($_POST['tax']);
 			$options['tax_rate'] = sanitize_text_field($_POST['tax_rate']);
 			$options['redirect'] = sanitize_text_field($_POST['redirect']);
+			$options['address'] = sanitize_text_field($_POST['address']);
 			
 			update_option("cf7pp_options", $options);
 			
@@ -663,6 +777,7 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 				<option <?php if ($value['language'] == "1") { echo "SELECTED"; } ?> value="1">Danish</option>
 				<option <?php if ($value['language'] == "2") { echo "SELECTED"; } ?> value="2">Dutch</option>
 				<option <?php if ($value['language'] == "3") { echo "SELECTED"; } ?> value="3">English</option>
+				<option <?php if ($value['language'] == "20") { echo "SELECTED"; } ?> value="20">English - UK</option>
 				<option <?php if ($value['language'] == "4") { echo "SELECTED"; } ?> value="4">French</option>
 				<option <?php if ($value['language'] == "5") { echo "SELECTED"; } ?> value="5">German</option>
 				<option <?php if ($value['language'] == "6") { echo "SELECTED"; } ?> value="6">Hebrew</option>
@@ -770,54 +885,94 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 				
 				<b>Redirect Method: </b>
 				
+				<?php
+				if (empty($value['redirect'])) {
+					$value['redirect'] = "1";
+				}
+				?>
+				
 				<select name="redirect">
 				<option <?php if ($value['redirect'] == "1") { echo "SELECTED"; } ?> value="1">Method 1</option>
 				<option <?php if ($value['redirect'] == "2") { echo "SELECTED"; } ?> value="2">Method 2</option>
 				</select> <br />
 				
 				Method 1 uses a Contact Form 7 to redirect (Prefered method). Method 2 disables Contact Form 7's Ajax to redirect to PayPal. <br /><br />
+				
+				
+				<?php
+				if (!isset($value['address'])) {
+					$value['address'] = "0";
+				}
+				?>
+				
+				<b>Requre Shipping Address: </b>
+				<select name="address" id="address">
+					<option value=""></option>
+					<option value="0" <?php if ($value['address'] == "0") { echo "SELECTED"; } ?>>Prompt for an address, but do not require one</option>
+					<option value="1" <?php if ($value['address'] == "1") { echo "SELECTED"; } ?>>Do not prompt for an address</option>
+					<option value="2" <?php if ($value['address'] == "2") { echo "SELECTED"; } ?>>Prompt for an address, and require one</option>
+				</select> Optional <br /> Should the customer be asked for a shipping address at PayPal checkout.
+				
+				<br /><br />
 			
 			
 			</div>
 			
-			<input type='hidden' name='update'>
+			<input type='hidden' name='update' value='1'>
 			</form>
 			
 			
 			
-				
 			<br /><br /><div style="background-color:#333333;padding:8px;color:#eee;font-size:12pt;font-weight:bold;">
 			&nbsp; License Key </div><div style="background-color:#fff;border: 1px solid #E5E5E5;padding:5px;">
 			
-				<form method="post" action="">
-				<table style="width:100%;">
-				<tr><th colspan="2" align="left">
-				<?php 
+			Enter your license key below to get access to the settings page and get plugin updates: <br /><br />
 				
-				if ($kstatus == "true") {
-				echo 'Your license key is:';
-				$buttonvalue = "Change";
-				} else {
-				echo '<b>Please enter your license key here:</b>';
-				$buttonvalue = "Activate";
-				}
-				
-				?>
-				</th></tr><tr><td width="300px">
-				<input class="textfield" name="cf7pp_plicsence_key" size="30" type="text" id="cf7pp_plicsence_key" value="<?php echo get_option('cf7pp_plicsence_key'.PLICENSE_PRODUCT_NAME); ?>" />
-				</td><td>
-				<input type="submit" value="<?php echo $buttonvalue; ?>" class="button-primary" id="plicense_activate" name="plicense_activate">&nbsp;&nbsp;&nbsp;
-				<br />
 				<?php
-				switch (get_option('cf7pp_plicsence_key_status')) {
-				case 'false': echo '<span style="color:red;float:left;">License key is not valid.</span>'; break;
-				case 'pending': echo '<span style="color:red;">License key is pending.</span>'; break;
-				case 'expired': echo '<span style="color:red;">License key is expired.</span>'; break;
-				}
+				$license 	= get_option( 'cf7pp_plicsence_keycf7pp' );
+				$status 	= get_option( 'cf7pp_plicsence_key_status' );
+				$expires 	= get_option( 'cf7pp_license_expires' );
 				?>
-				</td>
-				</tr>
-				</table>
+				
+				<form method="post" action="">
+					<table style="width:550px"><tr><th colspan="2" align="left">
+						<input name="key" size="40" type="text" value="<?php echo $license; ?>" />
+						
+						</td><td>
+						<?php
+						if( $status !== false && $status == 'valid' ) {
+							// valid
+							wp_nonce_field( 'cf7pp_nonce', 'cf7pp_nonce' );
+							echo "<input type='submit' class='button-secondary' name='cf7pp_license_deactivate' value='Deactivate License'>";
+						} else {
+							// invalid
+							wp_nonce_field( 'cf7pp_nonce', 'cf7pp_nonce' );
+							echo "<input type='submit' class='button-secondary' name='cf7pp_license_activate' value='Activate License'>";
+						}
+						?>
+						
+						</td></tr><tr><td>
+						
+						<?php
+						if( $status !== false && $status == 'valid' ) {
+						
+						echo "<span style='color:green;'>Your license is valid.</span> <br />
+						Your license key expires: ";
+						
+						
+						if ($expires == "lifetime") {
+							echo "Never";
+						} else {
+							$phpdate = strtotime( $expires );
+							echo $mysqldate = date( 'F d, Y', $phpdate );
+						}
+						
+						} else {
+						echo "<span style='color:red;'>Your license is not valid.</span>";
+						
+						} ?>
+						
+					</td></tr></table>
 				</form>
 				
 			</div>
@@ -838,40 +993,59 @@ if ( is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
 		
 		?>
 		
-		<div style='width:400px;'>
+		<div style='width:550px;'>
 			
 			<br /><br /><div style="background-color:#333333;padding:8px;color:#eee;font-size:12pt;font-weight:bold;">
 			&nbsp; License Key </div><div style="background-color:#fff;border: 1px solid #E5E5E5;padding:5px;">
+			
+			
+			Enter your license key below to get access to the settings page and get plugin updates: <br /><br />
 				
+				<?php
+				$license 	= get_option( 'cf7pp_plicsence_keycf7pp' );
+				$status 	= get_option( 'cf7pp_plicsence_key_status' );
+				$expires 	= get_option( 'cf7pp_license_expires' );
+				?>
 				
 				<form method="post" action="">
-				<table style="width:100%;">
-				<tr><th colspan="2" align="left">
-				<?php 
-				
-				if ($kstatus == "true") {
-				echo 'Your license key is:';
-				$buttonvalue = "Change";
-				} else {
-				echo '<b>Please enter your license key here:</b>';
-				$buttonvalue = "Activate";
-				}
-				
-				?>
-				</th></tr><tr><td>
-				<input class="textfield" name="cf7pp_plicsence_key" size="27" type="text" id="cf7pp_plicsence_key" value="<?php echo get_option('cf7pp_plicsence_key'.PLICENSE_PRODUCT_NAME); ?>" />
-				&nbsp; <input type="submit" value="<?php echo $buttonvalue; ?>" class="button-primary" id="plicense_activate" name="plicense_activate">&nbsp;&nbsp;&nbsp;
-				<br />
-				<?php
-				switch (get_option('cf7pp_plicsence_key_status')) {
-				case 'false': echo '<span style="color:red;float:left;">License key is not valid.</span>'; break;
-				case 'pending': echo '<span style="color:red;">License key is pending.</span>'; break;
-				case 'expired': echo '<span style="color:red;">License key is expired.</span>'; break;
-				}
-				?>
-				</td>
-				</tr>
-				</table>
+					<table style="width:100%;"><tr><th colspan="2" align="left">
+						<input name="key" size="40" type="text" value="<?php echo $license; ?>" />
+						
+						</td><td>
+						<?php
+						if( $status !== false && $status == 'valid' ) {
+							// valid
+							wp_nonce_field( 'cf7pp_nonce', 'cf7pp_nonce' );
+							echo "<input type='submit' class='button-secondary' name='cf7pp_license_deactivate' value='Deactivate License'>";
+						} else {
+							// invalid
+							wp_nonce_field( 'cf7pp_nonce', 'cf7pp_nonce' );
+							echo "<input type='submit' class='button-secondary' name='cf7pp_license_activate' value='Activate License'>";
+						}
+						?>
+						
+						</td></tr><tr><td>
+						
+						<?php
+						if( $status !== false && $status == 'valid' ) {
+						
+						echo "<span style='color:green;'>Your license is valid.</span> <br />
+						Your license key expires: ";
+						
+						
+						if ($expires == "lifetime") {
+							echo "Never";
+						} else {
+							$phpdate = strtotime( $expires );
+							echo $mysqldate = date( 'F d, Y', $phpdate );
+						}
+						
+						} else {
+						echo "<span style='color:red;'>Your license is not valid.</span>";
+						
+						} ?>
+						
+					</td></tr></table>
 				</form>
 			
 			</div>

@@ -8,17 +8,13 @@ WordPress Script Hooks
 
 // Function to add all stylesheets and JavaScript files
 function add_theme_scripts() {
-    wp_enqueue_style('open-sans-font', 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,700');
+    wp_enqueue_style('Raleway', 'https://fonts.googleapis.com/css?family=Raleway:100,300,400,600,900');
 	wp_enqueue_style('font-awesome', 'http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
     wp_enqueue_style('bootstrap', get_template_directory_uri().'/css/bootstrap.min.css');
     wp_enqueue_style('animation', get_template_directory_uri().'/css/animate.css');
-    wp_enqueue_style('slick', get_template_directory_uri().'/css/slick.css');
-    wp_enqueue_style('slickTheme', get_template_directory_uri().'/css/slick-theme.css');
 	wp_enqueue_style('main', get_template_directory_uri().'/css/screen.css');
 
     wp_enqueue_script('bootstrapjs', get_template_directory_uri().'/js/bootstrap.min.js', array('jquery'), '1.0', true);
-    wp_enqueue_script('inViewjs', get_template_directory_uri().'/js/inview.min.js', array('jquery'), '1.0', true);
-    wp_enqueue_script('sliderjs', get_template_directory_uri().'/js/slick.js', array('jquery'), '1.0', true);
 	wp_enqueue_script('appjs', get_template_directory_uri().'/js/app.js', array('jquery'), '1.0', true);
 }
 add_action('wp_enqueue_scripts', 'add_theme_scripts');
@@ -43,11 +39,11 @@ function register_my_menu() {
 add_action( 'init', 'register_my_menu' );
 
 // Getting Childs of Navigation Bar Item
-function get_nav_menu_item_children( $parent_id, $nav_menu_items, $depth = true ) 
+function get_nav_menu_item_children( $parent_id, $nav_menu_items, $depth = true )
 {
 	$nav_menu_item_list = array();
 	foreach ( (array) $nav_menu_items as $nav_menu_item ) {
-		
+
 		if ( $nav_menu_item->menu_item_parent == $parent_id ) {
 			$nav_menu_item_list[] = $nav_menu_item;
 			if ( $depth ) {
@@ -83,7 +79,7 @@ add_filter( 'login_headerurl', 'my_login_logo_url' );
 
 
 /***************************************
-WordPress Search Hook 
+WordPress Search Hook
 ***************************************/
 
 // Sort search by post type
@@ -99,7 +95,7 @@ function my_sort_custom( $orderby, $query ){
 
 
 /***************************************
-WooCommerce Methods 
+WooCommerce Methods
 ***************************************/
 
 /* Remove WooCommerce Lightbox styles and scripts. */

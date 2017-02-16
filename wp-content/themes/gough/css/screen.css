@@ -9,8 +9,10 @@ html, body {
   margin: 0;
   width: 100%;
   height: 100%;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px; }
+  font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  background-color: #607D8B; }
 
 a {
   text-decoration: none;
@@ -21,6 +23,53 @@ a {
 
 p {
   line-height: 1.8em; }
+
+.home-page .intro {
+  text-align: center; }
+  .home-page .intro .content h1 {
+    font-weight: 900;
+    font-size: 30px; }
+  .home-page .intro .content h2 {
+    font-weight: 100;
+    font-size: 20px; }
+  .home-page .intro .col-centered {
+    float: none;
+    margin: auto; }
+  .home-page .intro form {
+    background-color: #455A64;
+    padding: 30px !important; }
+    .home-page .intro form .DC_title {
+      padding-bottom: 20px;
+      font-size: 20px; }
+    .home-page .intro form #from {
+      margin-bottom: 10px;
+      background-color: transparent;
+      border: 1px solid #fff;
+      border-radius: 11px;
+      padding: 10px;
+      color: #fff; }
+      .home-page .intro form #from:focus {
+        outline: none; }
+    .home-page .intro form #to {
+      margin-bottom: 10px;
+      background-color: transparent;
+      border: 1px solid #fff;
+      border-radius: 11px;
+      padding: 10px;
+      color: #fff; }
+      .home-page .intro form #to:focus {
+        outline: none; }
+    .home-page .intro form #calculate {
+      padding: 10px 30px;
+      background-color: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      margin-top: 20px;
+      -webkit-transition: all .3s ease-out;
+      transition: all .3s ease-out; }
+      .home-page .intro form #calculate:hover {
+        background-color: #fff;
+        color: #000; }
 
 /*---------------------------------------------------------------------
 	WordPress Login Page Style
@@ -52,14 +101,14 @@ body.login div#login form#loginform input {
   box-shadow: none; }
 
 body.login div#login form#loginform input#user_login {
-  background: #f1f1f1;
+  background: #fff;
   height: 40px;
   font-size: 18px; }
   body.login div#login form#loginform input#user_login:focus {
     border-bottom: 2px solid #000; }
 
 body.login div#login form#loginform input#user_pass {
-  background: #f1f1f1;
+  background: #fff;
   height: 40px;
   font-size: 18px; }
   body.login div#login form#loginform input#user_pass:focus {
@@ -81,3 +130,39 @@ body.login div#login form#loginform p.submit input#wp-submit {
   body.login div#login form#loginform p.submit input#wp-submit:hover {
     background: #000;
     color: #fff; }
+
+#contact {
+  padding-bottom: 40px; }
+
+footer hr {
+  border: 1px solid #BDBDBD; }
+
+footer .social-links {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0; }
+  footer .social-links li {
+    display: inline-block;
+    margin: 0 5px;
+    border-radius: 3px;
+    box-shadow: 0 4px 0 transparent;
+    -webkit-transition: all .3s ease-out;
+    transition: all .3s ease-out; }
+    footer .social-links li a {
+      display: block;
+      color: #fff;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      -webkit-transition: all .3s ease-out;
+      transition: all .3s ease-out; }
+      footer .social-links li a:hover {
+        color: #fff;
+        background: #38A5DB; }
+    footer .social-links li .fa-fw {
+      padding-top: 10px; }

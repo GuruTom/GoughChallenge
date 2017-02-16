@@ -1,11 +1,14 @@
 === Contact Form 7 - PayPal Add-on Pro ===
+Plugin Name: Contact Form 7 - PayPal Add-on Pro
+Author: Scott Paterson
 Contributors: scottpaterson,wp-plugin
 Donate link: https://wpplugin.org/donate/
 Tags: paypal, contact form 7, cf7
 Author URI: https://wpplugin.org
-Requires at least: 3.0
-Tested up to: 4.3.1
-Stable tag: 1.7.3
+Requires at least: 3.5
+Tested up to: 4.4.2
+Stable tag: 1.8
+
 
 Integrates PayPal with Contact Form 7
 
@@ -33,23 +36,54 @@ WPPlugin is an offical PayPal Partner. Various trademarks held by their respecti
 
 == Changelog ==
 
+= 1.8 =
+* 3/4/16
+* Added feature - New internal upgrade manager.
+
+= 1.7.9 =
+* 2/23/16
+* Added feature - Can override currency per form.
+
+= 1.7.8 =
+* 1/21/16
+* Bug fix - Settings page not saving on some server configurations.
+
+= 1.7.7 =
+* 1/20/16
+* Added feature - Shipping address settings added on setttings page
+* Added feature - Can now skip redirecting to PayPal for 0.00 amounts, settings on PayPal tab of contact form
+* Bug fix - Fixed spelling mistake on PayPal tab of contact form
+
+= 1.7.6 =
+* 1/4/16
+* Bug fixed - Settings page redirect variables not getting set properly sometimes.
+
+= 1.7.5 =
+* 11/13/15
+* Added feature - Added English - UK option to language list - this effects which PayPal page the customer is redirected to.
+
+= 1.7.4 =
+* 11/10/15
+* Bug fixed - Non PayPal forms would redirect from bug from 1.7 update.
+* Bug fixed - If send email before payment option was choosen a PHP error was shown in the log.
+
 = 1.7.3 =
 * 11/3/15
-* Bug fix - Plugin would not redirect to PayPal due to error caused by some servers running on older version of PHP.
+* Bug fixed - Plugin would not redirect to PayPal due to error caused by some servers running on older version of PHP.
 
 = 1.7.2 =
 * 11/2/15
-* Bug fix - License activation problems
+* Bug fixed - License activation problems
 
 = 1.7.1 =
 * 10/27/15
-* Bug fix - Error shown when using PHP 5.4 or below.
+* Bug fixed - Error shown when using PHP 5.4 or below.
 
 = 1.7 =
 * 10/27/15
 * Major release
 * Feature - Alternative method of redirecting to PayPal - can change method on settings page.
-* Bug fix - Attachements now work properly, for both redirect methods.
+* Bug fixed - Attachements now work properly, for both redirect methods.
 * Feature - Added hook for developers - after payment has been completed - name of hook is: cf7pp_payment_successful
 * Feature - Flamingo integeration - now contacts are added to flamingo database using redriect method 1.
 
@@ -100,7 +134,7 @@ WPPlugin is an offical PayPal Partner. Various trademarks held by their respecti
 = 1.5 =
 * 8/13/15
 * Added feature - Ability to only send Contact Form 7 email is payment is successful or not at all
-* Bug fix - Some server permissions didn't allow plugin to be deactivated
+* Bug fixed - Some server permissions didn't allow plugin to be deactivated
 
 = 1.4.4 =
 * Added feature - Ability for each form to have its own PayPal account
@@ -132,23 +166,54 @@ WPPlugin is an offical PayPal Partner. Various trademarks held by their respecti
 
 == Upgrade Notice ==
 
+= 1.8 =
+* 3/4/16
+* Added feature - New internal upgrade manager.
+
+= 1.7.9 =
+* 2/23/16
+* Added feature - Can override currency per form.
+
+= 1.7.8 =
+* 1/21/16
+* Bug fix - Settings page not saving on some server configurations.
+
+= 1.7.7 =
+* 1/20/16
+* Added feature - Shipping address settings added on setttings page
+* Added feature - Can now skip redirecting to PayPal for 0.00 amounts, settings on PayPal tab of contact form
+* Bug fix - Fixed spelling mistake on PayPal tab of contact form
+
+= 1.7.6 =
+* 1/4/16
+* Bug fixed - Settings page redirect variables not getting set properly sometimes.
+
+= 1.7.5 =
+* 11/13/15
+* Added feature - Added English - UK option to language list - this effects which PayPal page the customer is redirected to.
+
+= 1.7.4 =
+* 11/10/15
+* Bug fixed - Non PayPal forms would redirect from bug from 1.7 update.
+* Bug fixed - If send email before payment option was choosen a PHP error was shown in the log.
+
 = 1.7.3 =
 * 11/3/15
-* Bug fix - Plugin would not redirect to PayPal due to error caused by some servers running on older version of PHP.
+* Bug fixed - Plugin would not redirect to PayPal due to error caused by some servers running on older version of PHP.
 
 = 1.7.2 =
 * 11/2/15
-* Bug fix - License activation problems
+* Bug fixed - License activation problems
 
 = 1.7.1 =
 * 10/27/15
-* Bug fix - Error shown when using PHP 5.4 or below.
+* Bug fixed - Error shown when using PHP 5.4 or below.
 
 = 1.7 =
 * 10/15/15
 * Major release
 * Feature - Alternative method of redirecting to PayPal - can change method on settings page.
-* Bug fix - Attachements now work properly, for both redirect methods.
+* Bug fixed - Attachements now work properly, for both redirect methods.
 * Feature - Added hook for developers - after payment has been completed - name of hook is: cf7pp_payment_successful
 * Feature - Flamingo integeration - now contacts are added to flamingo database using redriect method 1.
 
@@ -199,7 +264,7 @@ WPPlugin is an offical PayPal Partner. Various trademarks held by their respecti
 = 1.5 =
 * 8/13/15
 * Added feature - Ability to only send Contact Form 7 email is payment is successful or not at all
-* Bug fix - Some server permissions didn't allow plugin to be deactivated
+* Bug fixed - Some server permissions didn't allow plugin to be deactivated
 
 = 1.4.4 =
 * Added feature - Ability for each form to have its own PayPal account

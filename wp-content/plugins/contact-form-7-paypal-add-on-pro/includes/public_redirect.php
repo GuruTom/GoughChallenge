@@ -17,7 +17,12 @@ if (!empty($content)) {
 	foreach ($tags_back as $k => $v ) { $tags[$k] = $v; }
 }
 
+// address fix
+if (empty($tags['address'])) { $tags['address'] = "0"; }
+
+
 wp_delete_post($tagsid,true);
+
 
 if (!isset($tags) || empty($tags)) {
 	exit;
@@ -45,6 +50,7 @@ if (!isset($tags) || empty($tags)) {
 <input type='hidden' name='lc' value='<?php echo $tags['language']; ?>'>
 <input type='hidden' name='item_number' value='<?php echo $tags['id']; ?>' />
 <input type='hidden' name='cancel_return' value='<?php echo $tags['cancelvalue']; ?>' />
+<input type='hidden' name='no_shipping' value='<?php echo $tags['address']; ?>' />
 <input type='hidden' name='return' value='<?php echo $tags['returnvalue']; ?>' />
 <input type='hidden' name='quantity' value='<?php echo $tags['quantity']; ?>'>
 <input type='hidden' name='shipping' value='<?php echo $tags['shipping']; ?>' />

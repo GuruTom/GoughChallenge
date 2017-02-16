@@ -171,6 +171,10 @@ if  ($email == "1") {
 	global $new_post_id;
 	$new_post_id = wp_insert_post($my_post);
 	
+} else {
+
+$new_post_id = "";
+
 }
 
 
@@ -251,7 +255,19 @@ if (!empty($value['tax'])) { $tags['tax'] = $value['tax']; } else { $tags['tax']
 if (!empty($value['tax_rate'])) { $tags['tax_rate'] = $value['tax_rate']; } else { $tags['tax_rate'] = ""; }
 
 
+// address
+if (!empty($value['address'])) { $tags['address'] = $value['address']; } else { $tags['address'] = "0"; }
+
+
 // currency
+
+$currency_form = get_post_meta($post_id, "_cf7pp_currency", true);
+
+if (!empty($currency_form)) {
+	$value['currency'] = $currency_form;
+}
+
+
 if ($value['currency'] == "1") { $tags['currency'] = "AUD"; }
 if ($value['currency'] == "2") { $tags['currency'] = "BRL"; }
 if ($value['currency'] == "3") { $tags['currency'] = "CAD"; }
@@ -290,6 +306,10 @@ if ($value['language'] == "2") {
 if ($value['language'] == "3") {
 	$tags['language'] = "EN_US";
 } //English
+
+if ($value['language'] == "20") {
+	$tags['language'] = "en_GB";
+} //English - UK
 
 if ($value['language'] == "4") {
 	$tags['language'] = "fr_CA";
@@ -403,7 +423,7 @@ if (isset($tags['price'])) {
 		}
 		
 		$tags['price'] = $price_total;
-	}
+	}	
 }
 
 

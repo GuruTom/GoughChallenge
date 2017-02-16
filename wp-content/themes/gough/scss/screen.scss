@@ -5,6 +5,9 @@
 ----------------------------*/
 $white: #fff;
 $black: #000;
+$darkPrimary: #455A64;
+$Primary: #607D8B;
+
 
 /*---------------------------
 	General
@@ -15,8 +18,10 @@ html, body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
-	font-family: 'Open Sans', sans-serif;
+	font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
+	color: $white;
+	background-color: $Primary;
 }
 
 a {
