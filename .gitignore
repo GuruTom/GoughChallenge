@@ -1,9 +1,7 @@
 # Keep these files out of the repo
-/wp-content/themes/twenty*
+/wp-content/themes/gough/node_modules
 /wp-content/upgrade
 /wp-content/uploads
-/wp-content/themes/cb/node_modules/
-/wp-content/themes/cb/css/screen.css
 /sitemap.*
 /wp-config.php
 *.sql
