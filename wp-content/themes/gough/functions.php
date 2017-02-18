@@ -16,6 +16,7 @@ function add_theme_scripts() {
 
     wp_enqueue_script('bootstrapjs', get_template_directory_uri().'/js/bootstrap.min.js', array('jquery'), '1.0', true);
 	wp_enqueue_script('appjs', get_template_directory_uri().'/js/app.js', array('jquery'), '1.0', true);
+	wp_enqueue_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCl9CqhyQXqLIf_5hq_TpYqqyV8YTk-fbg&&libraries=geometry', '', false, true );
 }
 add_action('wp_enqueue_scripts', 'add_theme_scripts');
 
