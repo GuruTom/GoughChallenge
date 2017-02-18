@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	// When document has fully loaded
-
+	event.preventDefault();
 	// When Button has clicked store data into vars
 	jQuery(".btn-submit").click( function(){
 		// This does the ajax request

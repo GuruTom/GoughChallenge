@@ -85,4 +85,5 @@ function locationData() {
 	}
 }
 
-?>
+add_action( 'wp_ajax_locationCalculate', 'locationData' );
+add_action( 'wp_ajax_nopriv_locationCalculate', 'locationData' );

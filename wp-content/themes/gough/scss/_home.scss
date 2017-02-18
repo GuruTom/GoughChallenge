@@ -25,58 +25,39 @@
 			background-color: $darkPrimary;
 			padding: 30px !important;
 
-			.DC_title {
-				padding-bottom: 20px;
-			    font-size: 20px;
-			}
+			.form-group {
 
-			#from {
-    			margin-bottom: 10px;
-				background-color: transparent;
-				border: 1px solid $white;
-				border-radius: 11px;
-				padding: 10px;
-				color: $white;
-
-				&:focus {
-					outline: none;
-				}
-			}
-			#to {
-				margin-bottom: 10px;
-				background-color: transparent;
-				border: 1px solid $white;
-				border-radius: 11px;
-				padding: 10px;
-				color: $white;
-
-				&:focus {
-					outline: none;
-				}
-			}
-			#calculate {
-				padding: 10px 30px;
-			    background-color: transparent;
-			    border: 1px solid #fff;
-			    color: #fff;
-			    margin-top: 20px;
-				outline: none;
-				-webkit-transition: all .3s ease-out;
-			    transition: all .3s ease-out;
-
-				&:focus {
-					outline: none !important;
+				label {
+					display: block;
+					font-weight: 100;
 				}
 
-				&:hover {
-					background-color: $white;
-					color: $black
+				input {
+					background-color: transparent;
+				    border: 1px solid white;
+				    border-radius: 15px;
+				    padding: 5px;
+
+					&:focus {
+						outline: none;
+					}
+				}
+
+				.btn-submit {
+					background-color: transparent;
+					border: 1px solid white;
+					border-radius: 0px;
+					padding: 10px;
+					-webkit-transition: all .3s ease-out;
+					transition: all .3s ease-out;
+
+
+					&:hover {
+						background-color: $white;
+						color: $black;
+					}
 				}
 			}
-		}
-
-		#result {
-
 		}
 	}
 }
