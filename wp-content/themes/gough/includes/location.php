@@ -6,6 +6,68 @@
  * License: GPL3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  */
+
+function locationData() {
+	/**
+	* Pull the form fields, $_POST contains the data.
+	*/
+	if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
+		$currentLoc = urlencode( $_POST['currentLocation']);
+		$destLoc = urlencode( $_POST['destLocation']);;
+		$data = file_get_contents( "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$currentLoc&destinations=$destLoc&language=en-EN&sensor=false" );
+		$data = json_decode( $data );
+		$time = 0;
+		$distace = 0;
+
+		/**
+		* Check If form has had data entered
+		*/
+		if ( empty( $currentLoc ) OR empty( $destLoc) ) {
+			http_response_code(400);
+			echo "Please fill out all fields.";
+			die;
+		}
+
+		/**
+		* Get values from JSON Resoonse
+		*/
+		foreach ( $data->rows[0]->elements as $road ) {
+			$time += $road->duration->value;
+			$distance += $road->distance->value;
+		}
+		/**
+		* Calculate time in Hours and Minutes
+		*/
+		$time =$time/60;
+		$distance = round( $distance / 1000 );
+
+		/**
+		* Output the vaules
+		*/
+
+		if ( $distance != 0 ) {
+			echo "<div id='result-generated'>";
+			echo "Distance: " . $distance . " km(s)";
+			echo "<br/>";
+			echo "From: " . $data->origin_addresses[0];
+			echo "<br/>";
+			echo "To: ". $data->destination_addresses[0];
+			echo "<br/>";
+			echo "Time: ".gmdate("H:i", ($time * 60))." hour(s)";
+			echo "<br/>";
+			echo "</div>";
+			die;
+		} else {
+			http_response_code(500);
+			echo 'This is not working';
+			die;
+		}
+	}
+}
+add_action( 'wp_ajax_locationCalculate', 'locationData' );
+add_action( 'wp_ajax_nopriv_locationCalculate', 'locationData' );
+
+
 function distanceCalculator() {
 	/**
 	* Input form for user
@@ -31,62 +93,3 @@ function distanceCalculator() {
 	<?php
 }
 add_shortcode( 'Calculator', 'distanceCalculator');
-
-function locationData() {
-	/**
-	* Pull the form fields
-	*/
-	if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
-		$currentLoc = urlencode( $_POST['currentLocation']);
-		$destLoc = urlencode( $_POST['destLocation']);;
-		$data = file_get_contents( "http://maps.googleapis.com/maps/api/distancematrix/json?origins=$currentLoc&destinations=$destLoc&language=en-EN&sensor=false" );
-		$data = json_decode( $data );
-		$time = 0;
-		$distace = 0;
-
-		/**
-		* Check If form has had data entered
-		*/
-		if ( empty( $currentLoc ) OR empty( $destLoc) ) {
-			http_response_code(400);
-			echo "Please fill out all fields.";
-			die;
-		}
-
-		/**
-		* Calculate the disatnce
-		*/
-		foreach ( $data->rows[0]->elements as $road ) {
-			$time += $road->duration->text;
-			$distance += $road->distance->text;
-		}
-
-		//$time =$time/60;
-		//$distance = round( $distnace / 1000 );
-
-		/**
-		* Output the vaules
-		*/
-
-		if ( $distance != 0 ) {
-			echo "<div id='result-generated'>";
-			echo "From: " . $data->origin_addresses[0];
-			echo "<br/>";
-			echo "To: ". $data->destination_addresses[0];
-			echo "<br/>";
-			echo "Time: " . $time;
-			echo "<br/>";
-			echo "Distance: " . $distance . " Miles";
-			echo "<br/>";
-			echo "</div>";
-			die;
-		} else {
-			http_response_code(500);
-			echo 'This is not working';
-			die;
-		}
-	}
-}
-
-add_action( 'wp_ajax_locationCalculate', 'locationData' );
-add_action( 'wp_ajax_nopriv_locationCalculate', 'locationData' );
