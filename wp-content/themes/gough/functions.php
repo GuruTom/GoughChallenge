@@ -1,7 +1,7 @@
 <?php
 // Register Custom Navigation Walker
 require_once('wp_bootstrap_navwalker.php');
-require_once('inc/location.php');
+require_once('includes/location.php');
 /***************************************
 WordPress Script Hooks
 ***************************************/
