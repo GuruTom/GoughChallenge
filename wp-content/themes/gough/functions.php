@@ -1,21 +1,32 @@
 <?php
 // Register Custom Navigation Walker
 require_once('wp_bootstrap_navwalker.php');
-
+require_once('inc/location.php');
 /***************************************
 WordPress Script Hooks
 ***************************************/
-
 // Function to add all stylesheets and JavaScript files
 function add_theme_scripts() {
-    wp_enqueue_style('Raleway', 'https://fonts.googleapis.com/css?family=Raleway:100,300,400,600,900');
-	wp_enqueue_style('font-awesome', 'http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
-    wp_enqueue_style('bootstrap', get_template_directory_uri().'/css/bootstrap.min.css');
+
+	// Custom Fonts
+    wp_enqueue_style('raleway', 'https://fonts.googleapis.com/css?family=Raleway:100,300,400,600,900');
+	wp_enqueue_style('fontAwesome', 'http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+
+	// Main CSS stylesheets
+	wp_enqueue_style('bootstrap', get_template_directory_uri().'/css/bootstrap.min.css');
     wp_enqueue_style('animation', get_template_directory_uri().'/css/animate.css');
 	wp_enqueue_style('main', get_template_directory_uri().'/css/screen.css');
 
-    wp_enqueue_script('bootstrapjs', get_template_directory_uri().'/js/bootstrap.min.js', array('jquery'), '1.0', true);
-	wp_enqueue_script('appjs', get_template_directory_uri().'/js/app.js', array('jquery'), '1.0', true);
+	// JavaScript files
+    wp_enqueue_script('bootstrapJs', get_template_directory_uri().'/js/bootstrap.min.js', array('jquery'), '1.0', true);
+	wp_enqueue_script('appJs', get_template_directory_uri().'/js/app.js', array('jquery'), '1.0', true);
+	wp_enqueue_script( 'googleMaps', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCl9CqhyQXqLIf_5hq_TpYqqyV8YTk-fbg&&libraries=geometry', '', false, true );
+	// Ajax Localize
+	wp_localize_script( 'appJs', 'locationAjax',
+		array (
+			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+		)
+	);
 }
 add_action('wp_enqueue_scripts', 'add_theme_scripts');
 
@@ -55,11 +66,6 @@ function get_nav_menu_item_children( $parent_id, $nav_menu_items, $depth = true 
 	return $nav_menu_item_list;
 }
 
-// Register Widget Support
-if ( function_exists('register_sidebar') ) {
-	register_sidebar();
-}
-
 
 /***************************************
 WordPress Admin Login Hooks
@@ -92,28 +98,3 @@ function my_sort_custom( $orderby, $query ){
 
     return  $orderby;
 }
-
-
-/***************************************
-WooCommerce Methods
-***************************************/
-
-/* Remove WooCommerce Lightbox styles and scripts. */
-function woo_remove_lightboxes() {
-        // Styles
-        wp_dequeue_style( 'woocommerce_prettyPhoto_css' );
-        // Scripts
-        wp_dequeue_script( 'prettyPhoto' );
-        wp_dequeue_script( 'prettyPhoto-init' );
-        wp_dequeue_script( 'fancybox' );
-        wp_dequeue_script( 'enable-lightbox' );
-}
-add_action( 'wp_enqueue_scripts', 'woo_remove_lightboxes', 99 );
-
-// Making Responsive Lightbox by dFactory work with WooCommerce
-function df_woocommerce_single_product_image_html($html) {
-    $html = str_replace('data-rel="prettyPhoto', 'rel="lightbox', $html);
-    return $html;
-}
-add_filter('woocommerce_single_product_image_html', 'df_woocommerce_single_product_image_html', 99, 1); // single image
-add_filter('woocommerce_single_product_image_thumbnail_html', 'df_woocommerce_single_product_image_html', 99, 1); // thumbnails

@@ -6,7 +6,7 @@
  * License: GPL3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  */
-function locationForm() {
+function distanceCalculator() {
 	/**
 	* Input form for user
 	*/
@@ -29,8 +29,8 @@ function locationForm() {
 </form>
 
 	<?php
-add_shortcode( 'distanceCalculator', 'distanceCalculator');
 }
+add_shortcode( 'Calculator', 'distanceCalculator');
 
 function locationData() {
 	/**
@@ -49,7 +49,7 @@ function locationData() {
 	*/
 	if ( empty( $currentLoc ) OR empty( $destLoc) ) {
 		http_respone_code(400);
-		echo "Please fill out all fields."
+		echo "Please fill out all fields.";
 		die;
 	}
 
@@ -58,11 +58,11 @@ function locationData() {
 	*/
 	foreach ( $data->rows[0]->elements as $road ) {
 		$time += $road->duration->value;
-		$distance += $road->distance->value;
+		$distance += $road->distance->text;
 	}
 
 	$time =$time/60;
-	$distance = round( $distnace / 1000 );
+	//$distance = round( $distnace / 1000 );
 
 	/**
 	* Output the vaules
@@ -70,17 +70,19 @@ function locationData() {
 
 	if ( $distance != 0 ) {
 		echo "<div id='result-generated'>";
-		echo "Distance: " . $distance . " km(s)";
-		echo "<br/>";
 		echo "From: " . $data->origin_addresses[0];
 		echo "<br/>";
 		echo "To: ". $data->destination_addresses[0];
 		echo "<br/>";
+		echo "Time: ".gmdate("H:i", ($time * 60))." hour(s)";
+		echo "<br/>";
+		echo "Distance: " . $distance . " Miles";
+		echo "<br/>";
 		echo "</div>";
+		die;
+	} else {
+		die;
 	}
 }
-
-
-
 
 ?>
