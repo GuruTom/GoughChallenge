@@ -11,9 +11,8 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4 col-centered">
-					<?php echo do_shortcode('[distance_calculator]'); ?>
+					<?php echo do_shortcode('[Calculator]'); ?>
 				</div>
-
 			</div>
 		</div>
 	</section>

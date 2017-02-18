@@ -37,39 +37,24 @@ p {
   .home-page .intro form {
     background-color: #455A64;
     padding: 30px !important; }
-    .home-page .intro form .DC_title {
-      padding-bottom: 20px;
-      font-size: 20px; }
-    .home-page .intro form #from {
-      margin-bottom: 10px;
+    .home-page .intro form .form-group label {
+      display: block;
+      font-weight: 100; }
+    .home-page .intro form .form-group input {
       background-color: transparent;
-      border: 1px solid #fff;
-      border-radius: 11px;
-      padding: 10px;
-      color: #fff; }
-      .home-page .intro form #from:focus {
+      border: 1px solid white;
+      border-radius: 15px;
+      padding: 5px; }
+      .home-page .intro form .form-group input:focus {
         outline: none; }
-    .home-page .intro form #to {
-      margin-bottom: 10px;
+    .home-page .intro form .form-group .btn-submit {
       background-color: transparent;
-      border: 1px solid #fff;
-      border-radius: 11px;
+      border: 1px solid white;
+      border-radius: 0px;
       padding: 10px;
-      color: #fff; }
-      .home-page .intro form #to:focus {
-        outline: none; }
-    .home-page .intro form #calculate {
-      padding: 10px 30px;
-      background-color: transparent;
-      border: 1px solid #fff;
-      color: #fff;
-      margin-top: 20px;
-      outline: none;
       -webkit-transition: all .3s ease-out;
       transition: all .3s ease-out; }
-      .home-page .intro form #calculate:focus {
-        outline: none !important; }
-      .home-page .intro form #calculate:hover {
+      .home-page .intro form .form-group .btn-submit:hover {
         background-color: #fff;
         color: #000; }
 
