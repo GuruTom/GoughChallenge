@@ -17,6 +17,7 @@ function add_theme_scripts() {
     wp_enqueue_style('animation', get_template_directory_uri().'/css/animate.css');
 	wp_enqueue_style('main', get_template_directory_uri().'/css/screen.css');
 
+
 	// JavaScript files
     wp_enqueue_script('bootstrapJs', get_template_directory_uri().'/js/bootstrap.min.js', array('jquery'), '1.0', true);
 	wp_enqueue_script('appJs', get_template_directory_uri().'/js/app.js', array('jquery'), '1.0', true);
@@ -27,6 +28,7 @@ function add_theme_scripts() {
 			'ajaxurl'   => admin_url( 'admin-ajax.php' ),
 		)
 	);
+
 }
 add_action('wp_enqueue_scripts', 'add_theme_scripts');
 
