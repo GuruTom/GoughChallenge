@@ -1,10 +1,12 @@
 <?php
 /**
  * Plugin Name: Location Distance Calculator
- * Plugin URI: https://www.tomwithers.me
+ * Plugin URI: https://tomwithers.me
  * Description: calculate the distance between two given user points
  * License: GPL3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Author: Thomas WIthers
+ * Author URI: https://tomwithers.me
  */
 
 function locationData() {
