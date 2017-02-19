@@ -26,12 +26,12 @@ function locationData() {
 		*/
 		if ( empty( $currentLoc ) OR empty( $destLoc) ) {
 			http_response_code(400);
-			echo "Please fill out all fields.";
+			echo "Please enter your location and destination";
 			die;
 		}
 
 		/**
-		* Get values from JSON Resoonse
+		* Get values from JSON response
 		*/
 		foreach ( $data->rows[0]->elements as $road ) {
 			$time += $road->duration->value;

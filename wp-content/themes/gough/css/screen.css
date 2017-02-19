@@ -53,7 +53,8 @@ p {
       border-radius: 0px;
       padding: 10px;
       -webkit-transition: all .3s ease-out;
-      transition: all .3s ease-out; }
+      transition: all .3s ease-out;
+      outline: none; }
       .home-page .intro form .form-group .btn-submit:hover {
         background-color: #fff;
         color: #000; }
