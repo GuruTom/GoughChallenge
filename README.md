@@ -11,4 +11,5 @@ Repository for Code challenge set by Edd Smith @ Gough Bailey Wright.
 # Feedback
 
 - Feedback was very good, I was invited for a second interview at Gough's Office in bromsgrove.
-- I was offerd a position as a junior developer later that day
+- I was offerd a position as a junior developer later that day.
+- I later decided to accept a position at The Insolvency Service.
